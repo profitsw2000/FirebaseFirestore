@@ -20,6 +20,6 @@ public class MainActivity extends AppCompatActivity {
         navigation = new Navigation(getSupportFragmentManager())    ;
         InputFormFragment inputFormFragment = new InputFormFragment()   ;
 
-        navigation.addFragment(inputFormFragment, R.id.input_form, false);
+        navigation.addFragment(inputFormFragment, R.id.main_frame, false);
     }
 }

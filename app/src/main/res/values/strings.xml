@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">FirebaseFirestore</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="add_club_button">ADD NEW CLUB</string>
+    <string name="club_label">Club:</string>
+    <string name="city_label">City:</string>
+    <string name="country_label">Country:</string>
 </resources>

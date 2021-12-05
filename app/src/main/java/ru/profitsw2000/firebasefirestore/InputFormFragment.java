@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -61,9 +62,14 @@ public class InputFormFragment extends Fragment {
                 String city = cityEdit.getText().toString() ;
                 String country = countryEdit.getText().toString() ;
 
-                //create new instance of FC class and write it to realtime database
-                FootballClub footballClub = new FootballClub(id, club, city, country)   ;
-                databaseReference.push().setValue(footballClub) ;
+                //if form is not empty create new instance of FC class and write it to realtime database
+                if (!(club.isEmpty()) && !(city.isEmpty()) && !(country.isEmpty())) {
+                    FootballClub footballClub = new FootballClub(id, club, city, country)   ;
+                    databaseReference.push().setValue(footballClub) ;
+                }
+                else {
+                    Toast.makeText(getContext(), "There is empty fields!!!", Toast.LENGTH_SHORT).show();
+                }
 
                 //clear form
                 clubEdit.getText().clear();

@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -17,16 +19,28 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    private String TAG = "Logging"  ;
+    Button writeButton, readButton  ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Write a message to the database
-        FirebaseDatabase mDatabase = FirebaseDatabase.getInstance("https://fir-firestoreproject-6374c-default-rtdb.europe-west1.firebasedatabase.app/");
-        DatabaseReference mDbRef = mDatabase.getReference("Donor/Name");
-        mDbRef.setValue("Parinitha");
+        writeButton = this.findViewById(R.id.button_write)  ;
+        readButton = this.findViewById(R.id.button_read)    ;
+
+        writeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        readButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 }

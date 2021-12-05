@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">FirebaseFirestore</string>
+    <string name="button_txt_write">Write</string>
+    <string name="button_txt_read">Read</string>
 </resources>

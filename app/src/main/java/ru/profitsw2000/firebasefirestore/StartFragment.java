@@ -14,7 +14,8 @@ import android.view.ViewGroup;
  */
 public class StartFragment extends Fragment {
 
-    View rootView   ;
+    private View rootView   ;
+    private Navigation navigation   ;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

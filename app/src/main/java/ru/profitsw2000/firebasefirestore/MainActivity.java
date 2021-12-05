@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 public class MainActivity extends AppCompatActivity {
 
-    Navigation navigation   ;
+    public Navigation navigation   ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

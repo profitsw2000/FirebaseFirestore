@@ -19,7 +19,7 @@
 
             <TextView
                 android:id="@+id/club_label"
-                android:layout_width="0dp"
+                android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/label_text_size"
                 android:layout_weight="1"
@@ -44,7 +44,7 @@
 
             <TextView
                 android:id="@+id/city_label"
-                android:layout_width="0dp"
+                android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/label_text_size"
                 android:layout_weight="1"
@@ -69,7 +69,7 @@
 
             <TextView
                 android:id="@+id/country_label"
-                android:layout_width="0dp"
+                android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/label_text_size"
                 android:layout_weight="1"

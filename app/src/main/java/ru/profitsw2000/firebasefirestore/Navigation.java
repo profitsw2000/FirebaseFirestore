@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentTransaction;
 Class used for starting new fragment.
  */
 public class Navigation {
+
     private final FragmentManager fragmentManager   ;
 
     public Navigation(FragmentManager fragmentManager) {

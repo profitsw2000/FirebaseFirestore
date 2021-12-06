@@ -37,6 +37,7 @@ public class StartFragment extends Fragment {
 
     private void initUI() {
         writeButton = (Button) rootView.findViewById(R.id.button_write) ;
+        readButton = (Button) rootView.findViewById(R.id.button_read)   ;
 
         navigation = new Navigation(getActivity().getSupportFragmentManager())  ;
 
@@ -46,6 +47,14 @@ public class StartFragment extends Fragment {
                 InputFormFragment inputFormFragment = new InputFormFragment()   ;
 
                 navigation.addFragment(inputFormFragment, R.id.main_frame, true);
+            }
+        });
+
+        readButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ReadFromDBFragment readFromDBFragment = new ReadFromDBFragment()    ;
+                navigation.addFragment(readFromDBFragment, R.id.main_frame, true);
             }
         });
     }

@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 /**
  * Fragment to start with application. It contain two buttons to select
  * either to write info to Firebase or read from it.
@@ -18,8 +20,8 @@ public class StartFragment extends Fragment {
 
     private View rootView   ;
     private Navigation navigation   ;
-    Button writeButton, readButton  ;
-    FragmentManager fragmentManager ;
+    Button writeButton, readButton, logoutButton  ;
+    private FirebaseAuth firebaseAuth   ;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,6 +40,8 @@ public class StartFragment extends Fragment {
     private void initUI() {
         writeButton = (Button) rootView.findViewById(R.id.button_write) ;
         readButton = (Button) rootView.findViewById(R.id.button_read)   ;
+        logoutButton = (Button) rootView.findViewById(R.id.button_logout)   ;
+        firebaseAuth = FirebaseAuth.getInstance()   ;
 
         navigation = new Navigation(getActivity().getSupportFragmentManager())  ;
 
@@ -45,7 +49,6 @@ public class StartFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 InputFormFragment inputFormFragment = new InputFormFragment()   ;
-
                 navigation.addFragment(inputFormFragment, R.id.main_frame, true);
             }
         });
@@ -55,6 +58,15 @@ public class StartFragment extends Fragment {
             public void onClick(View v) {
                 ReadFromDBFragment readFromDBFragment = new ReadFromDBFragment()    ;
                 navigation.addFragment(readFromDBFragment, R.id.main_frame, true);
+            }
+        });
+
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                firebaseAuth.signOut();
+                LoginFragment loginFragment = new LoginFragment()   ;
+                navigation.addFragment(loginFragment, R.id.main_frame, false);
             }
         });
     }

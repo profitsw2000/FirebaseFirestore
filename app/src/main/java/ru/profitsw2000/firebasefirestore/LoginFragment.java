@@ -28,6 +28,7 @@ public class LoginFragment extends Fragment {
     private Button regButton, signinButton  ;
     private EditText edEmail, edPassword    ;
     private FirebaseAuth firebaseAuth   ;
+    private Navigation navigation   ;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,11 +50,32 @@ public class LoginFragment extends Fragment {
         edEmail = rootView.findViewById(R.id.editEmail) ;
         edPassword = rootView.findViewById(R.id.editPassword)   ;
         firebaseAuth = FirebaseAuth.getInstance()   ;
+        navigation = new Navigation(getActivity().getSupportFragmentManager())  ;
 
         signinButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if (!(edEmail.getText().toString().isEmpty()) && !(edPassword.getText().toString().isEmpty())) {
+                    firebaseAuth.signInWithEmailAndPassword(edEmail.getText().toString(), edPassword.getText().toString()).
+                            addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(getContext(), "User log in succesfully!", Toast.LENGTH_LONG).show();
+                                        StartFragment startFragment = new StartFragment()   ;
+                                        navigation.addFragment(startFragment,R.id.main_frame,false);
+                                    }
+                                    else {
+                                        edEmail.getText().clear();
+                                        edPassword.getText().clear();
+                                        Toast.makeText(getContext(), "Account login failed!", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
+                }
+                else {
+                    Toast.makeText(getContext(), "Error! Empty fields.", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -83,7 +105,6 @@ public class LoginFragment extends Fragment {
                 }
                 edEmail.getText().clear();
                 edPassword.getText().clear();
-                Toast.makeText(getContext(), "Pressed!", Toast.LENGTH_LONG).show();
             }
         });
     }

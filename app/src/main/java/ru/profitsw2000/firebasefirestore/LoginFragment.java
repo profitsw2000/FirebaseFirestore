@@ -2,12 +2,22 @@ package ru.profitsw2000.firebasefirestore;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 
 /**
  * Fragment with registration/signin form.
@@ -15,7 +25,9 @@ import android.widget.Button;
 public class LoginFragment extends Fragment {
 
     private View rootView   ;
-    Button regButton, signinButton  ;
+    private Button regButton, signinButton  ;
+    private EditText edEmail, edPassword    ;
+    private FirebaseAuth firebaseAuth   ;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -32,8 +44,11 @@ public class LoginFragment extends Fragment {
     }
 
     private void initUI() {
-        signinButton = rootView.findViewById(R.id.editEmail)    ;
-        regButton = rootView.findViewById(R.id.editPassword)    ;
+        signinButton = rootView.findViewById(R.id.button_signin)    ;
+        regButton = rootView.findViewById(R.id.button_register)    ;
+        edEmail = rootView.findViewById(R.id.editEmail) ;
+        edPassword = rootView.findViewById(R.id.editPassword)   ;
+        firebaseAuth = FirebaseAuth.getInstance()   ;
 
         signinButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,7 +60,30 @@ public class LoginFragment extends Fragment {
         regButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if (!(edEmail.getText().toString().isEmpty()) && !(edPassword.getText().toString().isEmpty())) {
+                    firebaseAuth.createUserWithEmailAndPassword(edEmail.getText().toString(), edPassword.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(getContext(), "User was registered succesfully!", Toast.LENGTH_LONG).show();
+                            }
+                            else {
+                                Toast.makeText(getContext(), "User registration failed!", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d("Failure", e.getLocalizedMessage());
+                        }
+                    })  ;
+                }
+                else {
+                    Toast.makeText(getContext(), "Error! Empty fields.", Toast.LENGTH_LONG).show();
+                }
+                edEmail.getText().clear();
+                edPassword.getText().clear();
+                Toast.makeText(getContext(), "Pressed!", Toast.LENGTH_LONG).show();
             }
         });
     }

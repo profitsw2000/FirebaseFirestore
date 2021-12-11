@@ -12,4 +12,5 @@
     <string name="password_edit">Password</string>
     <string name="button_text_registration">Registration</string>
     <string name="button_text_signin">SignIn</string>
+    <string name="button_logout_text">Logout</string>
 </resources>

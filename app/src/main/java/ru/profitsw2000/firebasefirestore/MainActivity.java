@@ -1,8 +1,14 @@
 package ru.profitsw2000.firebasefirestore;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -20,12 +26,6 @@ public class MainActivity extends AppCompatActivity {
 
         navigation = new Navigation(getSupportFragmentManager())    ;
         firebaseAuth = FirebaseAuth.getInstance()   ;
-
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser()   ;
         if (firebaseUser != null) {
             StartFragment startFragment = new StartFragment()   ;
@@ -36,5 +36,11 @@ public class MainActivity extends AppCompatActivity {
             navigation.addFragment(loginFragment, R.id.main_frame, false);
             Toast.makeText(this, "Null", Toast.LENGTH_LONG).show();
         }
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 }

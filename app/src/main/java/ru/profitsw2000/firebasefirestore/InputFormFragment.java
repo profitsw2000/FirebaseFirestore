@@ -1,14 +1,24 @@
 package ru.profitsw2000.firebasefirestore;
 
+import static android.app.Activity.RESULT_OK;
+
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
@@ -23,7 +33,9 @@ public class InputFormFragment extends Fragment {
 
     private View rootView   ;
     private Button addButton    ;
+    private TextView debug  ;
     private EditText clubEdit, cityEdit, countryEdit    ;
+    private ImageView logoImage ;
     private DatabaseReference databaseReference  ;
 
     @Override
@@ -48,6 +60,8 @@ public class InputFormFragment extends Fragment {
         clubEdit = rootView.findViewById(R.id.editClub) ;
         cityEdit = rootView.findViewById(R.id.editCity) ;
         countryEdit = rootView.findViewById(R.id.editCountry)   ;
+        logoImage = rootView.findViewById(R.id.imageView)   ;
+        debug = rootView.findViewById(R.id.temp_debug_text) ;
 
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance("https://fir-firestoreproject-6374c-default-rtdb.europe-west1.firebasedatabase.app/")   ;
         databaseReference = firebaseDatabase.getReference(KEY)  ;
@@ -77,5 +91,45 @@ public class InputFormFragment extends Fragment {
                 countryEdit.getText().clear();
             }
         });
+
+        logoImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getImage();
+            }
+        });
+    }
+
+    private void getImage() {
+        Intent intent = new Intent()    ;
+        intent.setType("image/*")   ;
+        intent.setAction(Intent.ACTION_GET_CONTENT) ;
+        activityResultLauncher.launch(intent);
+    }
+
+    private ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                   if (result.getData() != null){
+                       if (result.getResultCode() == RESULT_OK){
+                           Log.d("Intent_log", "Image URI: " + result.getData())    ;
+                           debug.setText(result.getData().toString());
+                       }
+                   }
+                }
+            });
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d("Intent_log", "onStop ")    ;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d("Intent_log", "onDestroy ")    ;
     }
 }

@@ -3,6 +3,8 @@ package ru.profitsw2000.firebasefirestore;
 import static android.app.Activity.RESULT_OK;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -10,6 +12,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -22,8 +25,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
 
 /**
  * Fragment with form used for adding info to database.
@@ -31,6 +42,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class InputFormFragment extends Fragment {
 
     private String KEY = "footbal_club" ;
+    private String STORAGE_KEY = "FC Logos" ;
 
     private View rootView   ;
     private Button addButton    ;
@@ -38,6 +50,8 @@ public class InputFormFragment extends Fragment {
     private EditText clubEdit, cityEdit, countryEdit    ;
     private ImageView logoImage ;
     private DatabaseReference databaseReference  ;
+    private StorageReference storageReference   ;
+    private Uri uri ;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,6 +80,7 @@ public class InputFormFragment extends Fragment {
 
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance("https://fir-firestoreproject-6374c-default-rtdb.europe-west1.firebasedatabase.app/")   ;
         databaseReference = firebaseDatabase.getReference(KEY)  ;
+        storageReference = FirebaseStorage.getInstance().getReference(STORAGE_KEY)   ;
 
         //click on button ADD NEW CLUB
         addButton.setOnClickListener(new View.OnClickListener() {
@@ -78,9 +93,10 @@ public class InputFormFragment extends Fragment {
                 String country = countryEdit.getText().toString() ;
 
                 //if form is not empty create new instance of FC class and write it to realtime database
-                if (!(club.isEmpty()) && !(city.isEmpty()) && !(country.isEmpty())) {
+                if (!(club.isEmpty()) && !(city.isEmpty()) && !(country.isEmpty()) && (uri != null)) {
                     FootballClub footballClub = new FootballClub(id, club, city, country)   ;
                     databaseReference.push().setValue(footballClub) ;
+                    uploadImage();
                 }
                 else {
                     Toast.makeText(getContext(), "There is empty fields!!!", Toast.LENGTH_SHORT).show();
@@ -115,7 +131,7 @@ public class InputFormFragment extends Fragment {
                 public void onActivityResult(ActivityResult result) {
                    if (result.getData() != null){
                        if (result.getResultCode() == RESULT_OK){
-                           Uri uri = result.getData().getData()   ;
+                           uri = result.getData().getData()   ;
                            Log.d("Intent_log", "Image URI: " + uri)    ;
                            debug.setText(uri.toString());
                            logoImage.setImageURI(uri);
@@ -124,15 +140,25 @@ public class InputFormFragment extends Fragment {
                 }
             });
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.d("Intent_log", "onStop ")    ;
-    }
+    private void uploadImage()
+    {
+        Bitmap bitmap = ((BitmapDrawable) logoImage.getDrawable()).getBitmap()  ;
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()   ;
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100,byteArrayOutputStream)  ;
+        byte[] bytes = byteArrayOutputStream.toByteArray()  ;
+        final StorageReference myRef = storageReference.child(System.currentTimeMillis() + "fc_logo")   ;
+        UploadTask uploadTask = myRef.putBytes(bytes)   ;
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.d("Intent_log", "onDestroy ")    ;
+        Task<Uri> task = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            @Override
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                return myRef.getDownloadUrl();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                uri = task.getResult()  ;
+            }
+        });
     }
 }

@@ -6,15 +6,17 @@ public class FootballClub {
     private String club ;
     private String city ;
     private String country ;
+    private String fc_logo  ;
 
     public FootballClub() {
     }
 
-    public FootballClub(String id, String club, String city, String country) {
+    public FootballClub(String id, String club, String city, String country, String fc_logo) {
         this.id = id    ;
         this.club = club    ;
         this.city = city    ;
         this.country = country  ;
+        this.fc_logo = fc_logo  ;
     }
 
     public String getId() {
@@ -47,5 +49,13 @@ public class FootballClub {
 
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    public String getFc_logo() {
+        return fc_logo;
+    }
+
+    public void setFc_logo(String fc_logo) {
+        this.fc_logo = fc_logo;
     }
 }

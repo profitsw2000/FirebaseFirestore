@@ -33,6 +33,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 
@@ -46,7 +47,6 @@ public class InputFormFragment extends Fragment {
 
     private View rootView   ;
     private Button addButton    ;
-    private TextView debug  ;
     private EditText clubEdit, cityEdit, countryEdit    ;
     private ImageView logoImage ;
     private DatabaseReference databaseReference  ;
@@ -76,11 +76,12 @@ public class InputFormFragment extends Fragment {
         cityEdit = rootView.findViewById(R.id.editCity) ;
         countryEdit = rootView.findViewById(R.id.editCountry)   ;
         logoImage = rootView.findViewById(R.id.imageView)   ;
-        debug = rootView.findViewById(R.id.temp_debug_text) ;
 
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance("https://fir-firestoreproject-6374c-default-rtdb.europe-west1.firebasedatabase.app/")   ;
         databaseReference = firebaseDatabase.getReference(KEY)  ;
         storageReference = FirebaseStorage.getInstance().getReference(STORAGE_KEY)   ;
+
+        Picasso.get().load("https://firebasestorage.googleapis.com/v0/b/fir-firestoreproject-6374c.appspot.com/o/FC%20Logos%2F1639332586103fc_logo?alt=media&token=a1fbed4c-e0ca-4ba4-bce4-66dad7b6df78").into(logoImage);
 
         //click on button ADD NEW CLUB
         addButton.setOnClickListener(new View.OnClickListener() {
@@ -94,8 +95,9 @@ public class InputFormFragment extends Fragment {
 
                 //if form is not empty create new instance of FC class and write it to realtime database
                 if (!(club.isEmpty()) && !(city.isEmpty()) && !(country.isEmpty()) && (uri != null)) {
-                    String fc_logo = uri.toString() ;
                     uploadImage();
+                    String fc_logo = uri.toString() ;
+                    Log.d("Img", fc_logo)   ;
                     FootballClub footballClub = new FootballClub(id, club, city, country, fc_logo)   ;
                     databaseReference.push().setValue(footballClub) ;
                     Toast.makeText(getContext(), "New club info added to database!", Toast.LENGTH_SHORT).show();
@@ -136,7 +138,6 @@ public class InputFormFragment extends Fragment {
                        if (result.getResultCode() == RESULT_OK){
                            uri = result.getData().getData()   ;
                            Log.d("Intent_log", "Image URI: " + uri)    ;
-                           debug.setText(uri.toString());
                            logoImage.setImageURI(uri);
                        } 
                    }

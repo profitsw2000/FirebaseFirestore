@@ -5,7 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -47,6 +50,7 @@ public class FootballClubAdapter extends BaseAdapter {
             clubViewHolder.textViewClubName = (TextView)convertView.findViewById(R.id.item_club)  ;
             clubViewHolder.textViewCity = (TextView)convertView.findViewById(R.id.item_city) ;
             clubViewHolder.textViewCountry = (TextView)convertView.findViewById(R.id.item_country)   ;
+            clubViewHolder.imageLogoFC = (ImageView)convertView.findViewById(R.id.logo_img_list_item)   ;
 
             convertView.setTag(clubViewHolder);
         } else {
@@ -55,9 +59,11 @@ public class FootballClubAdapter extends BaseAdapter {
 
         final FootballClub footballClub = league.get(position);
 
-        ((TextView)convertView.findViewById(R.id.item_club)).setText(footballClub.getClub());
-        ((TextView)convertView.findViewById(R.id.item_city)).setText(footballClub.getCity());
-        ((TextView)convertView.findViewById(R.id.item_country)).setText(footballClub.getCountry());
+        clubViewHolder.textViewClubName.setText(footballClub.getClub());
+        clubViewHolder.textViewCity.setText(footballClub.getCity());
+        clubViewHolder.textViewCountry.setText(footballClub.getCountry());
+        Picasso.get().load(footballClub.getFc_logo()).into(clubViewHolder.imageLogoFC);
+        //((ImageView)convertView.findViewById(R.id.logo_img_list_item)).setImageResource(R.drawable.common_google_signin_btn_icon_dark);
 
         return convertView;
     }
@@ -66,5 +72,6 @@ public class FootballClubAdapter extends BaseAdapter {
         public TextView textViewClubName    ;
         public TextView textViewCity    ;
         public TextView textViewCountry    ;
+        public ImageView imageLogoFC    ;
     }
 }

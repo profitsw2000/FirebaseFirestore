@@ -3,6 +3,7 @@ package ru.profitsw2000.firebasefirestore;
 import static android.app.Activity.RESULT_OK;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResult;
@@ -114,9 +115,11 @@ public class InputFormFragment extends Fragment {
                 public void onActivityResult(ActivityResult result) {
                    if (result.getData() != null){
                        if (result.getResultCode() == RESULT_OK){
-                           Log.d("Intent_log", "Image URI: " + result.getData())    ;
-                           debug.setText(result.getData().toString());
-                       }
+                           Uri uri = result.getData().getData()   ;
+                           Log.d("Intent_log", "Image URI: " + uri)    ;
+                           debug.setText(uri.toString());
+                           logoImage.setImageURI(uri);
+                       } 
                    }
                 }
             });

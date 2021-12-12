@@ -91,10 +91,10 @@ public class InputFormFragment extends Fragment {
                 String club = clubEdit.getText().toString() ;
                 String city = cityEdit.getText().toString() ;
                 String country = countryEdit.getText().toString() ;
-                String fc_logo = uri.toString() ;
 
                 //if form is not empty create new instance of FC class and write it to realtime database
                 if (!(club.isEmpty()) && !(city.isEmpty()) && !(country.isEmpty()) && (uri != null)) {
+                    String fc_logo = uri.toString() ;
                     uploadImage();
                     FootballClub footballClub = new FootballClub(id, club, city, country, fc_logo)   ;
                     databaseReference.push().setValue(footballClub) ;

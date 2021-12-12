@@ -91,12 +91,14 @@ public class InputFormFragment extends Fragment {
                 String club = clubEdit.getText().toString() ;
                 String city = cityEdit.getText().toString() ;
                 String country = countryEdit.getText().toString() ;
+                String fc_logo = uri.toString() ;
 
                 //if form is not empty create new instance of FC class and write it to realtime database
                 if (!(club.isEmpty()) && !(city.isEmpty()) && !(country.isEmpty()) && (uri != null)) {
-                    FootballClub footballClub = new FootballClub(id, club, city, country)   ;
-                    databaseReference.push().setValue(footballClub) ;
                     uploadImage();
+                    FootballClub footballClub = new FootballClub(id, club, city, country, fc_logo)   ;
+                    databaseReference.push().setValue(footballClub) ;
+                    Toast.makeText(getContext(), "New club info added to database!", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     Toast.makeText(getContext(), "There is empty fields!!!", Toast.LENGTH_SHORT).show();
@@ -106,6 +108,7 @@ public class InputFormFragment extends Fragment {
                 clubEdit.getText().clear();
                 cityEdit.getText().clear();
                 countryEdit.getText().clear();
+                logoImage.setImageResource(R.drawable.ic_launcher_background);
             }
         });
 
